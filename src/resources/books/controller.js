@@ -49,41 +49,81 @@ function getOneById(req, res) {
     .catch(console.error);
 }
 
-const getBooksByTypeFiction = async (req, res) => {
-  console.log(
-    "getBooksByTypeFiction",
-    { params: req.params }
-  );
+// const getBooksByTypeFiction = async (req, res) => {
+//   console.log(
+//     "getBooksByTypeFiction",
+//     { params: req.params }
+//   );
 
-  const { type } = req.params;
+  // const { type } = req.params;
 
-  const Sql = `
-SELECT * FROM books
-WHERE
-type = 'Fiction';
-`;
+//   const Sql = `
+// SELECT * FROM books
+// WHERE
+// type = 'Fiction';
+// `;
+//   try {
+   
+//       const result = await db.query(Sql);  
+//     // console.log(result.rows)
+//     res.json({ data: result.rows[0]});
+//   } catch (error) {
+//     console.error("[ERROR] getBookByType: ", { error: error.message });
 
-//   const capitalizedType = type
-//   .split("-")
-//   .map(word => capitalizedType(word))
-//   .join("-")
+//     res.status(500).json({ error: error.message });
+//   }
+// };
 
-//   console.log(capitalizedType);
+const getFictionBooks = async (req, res) => {
+  console.log("getFictionBooks", { query: req.query })
+
+  const sql = `
+    SELECT * FROM books
+    WHERE
+      type = 'Fiction';
+  `
 
   try {
-   
-      const result = await db.query(Sql, [type]);  
-    // console.log(result.rows)
-    res.json({ data: result.rows[0]});
-  } catch (error) {
-    console.error("[ERROR] getBookByType: ", { error: error.message });
+    const result = await db.query(sql)
 
-    res.status(500).json({ error: error.message });
+    console.log({ result })
+
+    res.json({ data: result.rows })
+  } catch (error) {
+    console.error("[ERROR] getFictionBooks: ", { error })
+
+    res.json({ error })
   }
 };
+
+const getNonFictionBooks = async (req, res) => {
+  console.log("getNonFictionBooks", { query: req.query })
+
+  const sql = `
+    SELECT * FROM books
+    WHERE
+      type = 'Non-Fiction';
+  `
+
+  try {
+    const result = await db.query(sql)
+
+    console.log({ result })
+
+    res.json({ data: result.rows })
+  } catch (error) {
+    console.error("[ERROR] getNonFictionBooks: ", { error })
+
+    res.json({ error })
+  }
+};
+
+
 module.exports = {
   createOne,
   getAll,
   getOneById,
-  getBooksByTypeFiction,
+  // getBooksByTypeFiction,
+  getFictionBooks,
+  getNonFictionBooks
 };
